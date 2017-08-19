@@ -4,10 +4,10 @@ A Grails plugin to allow applications send sms, lookup a number and make calls. 
 
 ## Installation
 
-You can add this plugin to your application by adding the following to your `BuildConfig.groovy file`:
+You can add this plugin to your application by adding the following to your `build.gradle file`:
 
 ```groovy
-plugins {
+dependencies {
   compile ":grails-nexmo:1.0" // Add this line
 }
 ```
