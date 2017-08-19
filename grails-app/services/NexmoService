@@ -1,0 +1,203 @@
+
+import grails.transaction.Transactional
+import org.springframework.context.i18n.LocaleContextHolder as LCH
+import grails.core.GrailsApplication
+import groovyx.net.http.HTTPBuilder
+
+
+/**
+ *
+ * @author Ademola Oyewale
+ * <saopayne@gmail.com>
+ */
+class NexmoService {
+
+    static transactional = false
+
+    GrailsApplication grailsApplication
+    HTTPBuilder httpBuilderClient
+    String hostUrl = ""
+
+    def messageSource
+
+
+    /**
+     *
+     * @param url
+     * @return Httpbuilder: an instance of httpbuilder
+     */
+    HTTPBuilder createRestClient(String url) {
+        HTTPBuilder restClient = new HTTPBuilder(url)
+        return restClient
+    }
+
+    /**
+     *
+     * @param payload : a json string containing [from, to, text]
+     * @requestType: POST
+     * @return Map : response from Nexmo server
+     */
+
+    Map makeSmsPostRequest(Map payload) {
+        Map result = [:]
+        httpBuilderClient.post(body: payload) { resp,json ->
+            def message = json?.messages[0]
+            def statusCode = message?.status
+
+            if (statusCode == "0") {
+                result.status = message?.status
+                result.id = message?."message-id"
+                result.to = message?.to
+            } else {
+                def error = getMessage("nexmo.sms.status.${statusCode}",
+                        [message?."error-text"], getMessage("nexmo.sms.error.default"))
+                result.status = message?.status
+                result.error = error
+                throw new NexmoException(error)
+            }
+        }
+        return result
+    }
+
+
+    /**
+     *
+     * @param payload : a json string containing [from, to, text]
+     * @requestType: POST
+     * @return Map : response from Nexmo server
+     */
+
+    Map makeCallPostRequest(Map payload) {
+        Map result = [:]
+        httpBuilderClient.post(body: payload) { resp,json ->
+
+            def statusCode = json?.status
+            if (statusCode != "0") {
+                def error = getMessage("nexmo.call.status.${statusCode}", [data?."error-text"], getMessage("nexmo.call.error.default"))
+                throw new NexmoException(error)
+            }
+            log.info(getMessage("nexmo.call.success"))
+            result = [status: data?.status, id: data?."call-id"]
+        }
+        return result
+    }
+
+    /**
+     * Look up a phone number given the api credentials and the phone number
+     *
+     * @param payload : a json string containing [api_secret, api_key ,number]
+     * @requestType: GET
+     * @return Map : response from Nexmo server
+     */
+    Map makeLookUpGetRequest(Map payload) {
+        Map result = [:]
+        httpBuilderClient.get(contentType : 'application/json' ,
+                query : payload ) { resp, reader ->
+            // [carrier:[name:ph.carrierName, type:ph.carrierType],country_code:ph.countryCode  ]
+            def statusCode = reader?.status
+            if (statusCode != 0) {
+                def error = getMessage("nexmo.sms.status.${statusCode}",
+                        [reader?."error-text"], getMessage("nexmo.sms.error.default"))
+                result.status = reader?.status
+                result.error = error
+                throw new NexmoException(error)
+            } else {
+                result.carrier = [:]
+                result.carrier.error_code = null
+                result.carrier.mobile_country_code = reader?.country_code
+                result.carrier.network_code = reader?.current_carrier?.network_code
+                result.carrier.name = reader?.current_carrier?.name
+                result.carrier.type = reader?.current_carrier?.network_type
+                result.country_code = reader?.country_code
+            }
+        }
+        return result
+    }
+
+
+    /**
+     * Send an SMS message to a mobile device.
+     * @param to: The phone number to send the message to, in International Format
+     * @param text: The text of the message
+     * @param from: The phone number to send the message from
+     * @param apiKey:
+     * @param apiSecret
+     * @param callbackUrl
+     * @return Map: The data returned from the request
+     */
+    @Transactional
+    Map sendSms(String apiKey, String apiSecret, String callbackUrl = "", String from, String to, String text) throws NexmoException{
+        String url = "https://rest.nexmo.com/sms/json"
+        String contentType = 'application/json'
+        Map reqBody = [:]
+        if (callbackUrl) {
+            reqBody = [api_key:apiKey, api_secret: apiSecret, text: text, from: from, to: to, callback: callbackUrl]
+        } else {
+            reqBody = [api_key:apiKey, api_secret: apiSecret, text: text, from: from, to: to]
+        }
+        httpBuilderClient = createRestClient(url)
+        httpBuilderClient.setContentType(contentType)
+        httpBuilderClient.ignoreSSLIssues()
+        Map result = makeSmsPostRequest(reqBody)
+        return result
+    }
+
+    /**
+     * Sends a phone call using Nexmo's text-to-speech API.
+     * @param to The phone number to send the call to, in International Format
+     * @param text The message to deliver during the call
+     * @param from (optional) The phone number to send the call from. Must be a voice enabled inbound number associated with your account
+     * @return Map The data returned from the request
+     * @throws NexmoException
+     */
+    def call(String apiKey, String apiSecret, String to, String text, String from="") throws NexmoException {
+        if (!to || !text) {
+            throw new NexmoException(getMessage("nexmo.call.error.missing.param"))
+        }
+        String url = "https://rest.nexmo.com/tts/json"
+        def requestBody = [to: to, text: text, from: from, api_key: apiKey, api_secret: apiSecret]
+        String contentType = 'application/json'
+        httpBuilderClient = createRestClient(url)
+        httpBuilderClient.setContentType(contentType)
+        httpBuilderClient.ignoreSSLIssues()
+        Map result = makeCallPostRequest(requestBody)
+        return result
+    }
+
+
+    /**
+     * Lookup information about a phone number.
+     * @param number: the number to lookup
+     * @requestType: GET
+     * Nexmo url: request url for number lookup. eg "https://api.nexmo.com/number/lookup/json?api_key=xx&api_secret=xx&number=xx"</li>
+     *
+     * @returns Map : the response
+     */
+    @Transactional
+    Map lookup(String apiKey, String apiSecret, String number){
+        String contentType = 'application/json'
+        Map reqBody = [api_key:apiKey, api_secret: apiSecret, number: number]
+        String url = "https://api.nexmo.com/number/lookup/json"
+        httpBuilderClient = createRestClient(url)
+        httpBuilderClient.setContentType(contentType)
+        httpBuilderClient.ignoreSSLIssues()
+        Map result = makeLookUpGetRequest(reqBody)
+        return result
+    }
+
+
+    /**
+     *
+     * @param code
+     * @param args
+     * @param defaultMessage
+     * @return
+     */
+    private String getMessage(String code, List args=[], String defaultMessage="") {
+        if (messageSource.getMessage(code, args.toArray(), LCH.locale) != null ) {
+            return messageSource.getMessage(code, args.toArray(), LCH.locale)
+        }
+        return defaultMessage
+    }
+
+}

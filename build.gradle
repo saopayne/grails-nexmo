@@ -51,6 +51,14 @@ dependencies {
     testCompile "org.grails.plugins:geb"
     testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
+    compile('org.codehaus.groovy.modules.http-builder:http-builder:0.7.1')
+    compile(group:'org.apache.httpcomponents',name:'httpclient',version:'4.3.6')
+    compile(group:'org.apache.httpcomponents',name:'fluent-hc',version:'4.3.6')
+    compile(group:'org.apache.httpcomponents',name:'httpclient-cache',version:'4.3.6')
+    compile(group:'org.apache.httpcomponents',name:'httpmime',version:'4.3.6')
+    compile 'org.grails:grails-datastore-rest-client:5.0.0.RC2'
+
+
 }
 grailsPublish {
     // TODO: Provide values here
@@ -60,9 +68,9 @@ grailsPublish {
     license {
         name = 'Apache-2.0'
     }
-    title = "My Plugin"
+    title = "Grails-Nexmo"
     desc = "Full plugin description"
-    developers = [johndoe:"John Doe"]
+    developers = [saopayne:"Oyewale Ademola"]
     portalUser = ""
     portalPassword = ""    
 }

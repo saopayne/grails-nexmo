@@ -1,0 +1,120 @@
+
+import grails.core.DefaultGrailsApplication
+import grails.plugins.rest.client.RequestCustomizer
+
+import grails.test.mixin.TestFor
+import grails.test.mixin.TestMixin
+import grails.test.mixin.web.ControllerUnitTestMixin
+import groovyx.net.http.HTTPBuilder
+import org.springframework.util.ResourceUtils
+import spock.lang.Specification
+
+/**
+ * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
+ */
+@TestFor(NexmoService)
+@TestMixin(ControllerUnitTestMixin)
+class NexmoServiceSpec extends Specification {
+
+    NexmoService nexmoService
+
+    def setup() {
+        nexmoService = GroovySpy(NexmoService, constructorArgs:[[transactionManager: getTransactionManager()]])
+        nexmoService.grailsApplication = new DefaultGrailsApplication()
+    }
+
+    def cleanup() {
+    }
+
+
+    void "test that createRestClient action returns a valid httpbuilder object"() {
+        setup:
+        String url = "http://xxxx.com"
+
+        when:
+        def resultClient = nexmoService.createRestClient(url)
+
+        then: "the url is valid and the httpbuilder instance is returned"
+        assert resultClient.headers != null
+        assert ResourceUtils.isUrl(url) // the url is a valid url
+    }
+
+    void "test sendSms action with credentials from config"() {
+        setup:
+        String from = "+1348459454"
+        String to = "234703000000"
+        String text = "message body"
+        Map expectedResponse = [status:200, message:"Message sent successfully"]
+
+        when:
+        def gottenResponse = nexmoService.sendSms(_ as String, _ as String, from, to, text)
+
+        then:
+        1 * nexmoService.makeSmsPostRequest(*_) >> {
+            [status:200, message:"Message sent successfully"]
+        }
+        assert gottenResponse == expectedResponse
+    }
+
+    void "test lookup action with credentials from config"() {
+        setup:
+        String number = "2348135617056"
+        Map expectedResponse = [status:200, message:"Message sent successfully"]
+
+        when:
+        def gottenResponse = nexmoService.lookup(_ as String, _ as String, number)
+
+        then:
+        1 * nexmoService.makeLookUpGetRequest(*_) >> {
+            [status:200, message:"Message sent successfully"]
+        }
+        assert gottenResponse == expectedResponse
+
+    }
+
+    void "test makePostRequest"() {
+        given:
+        final String restUrl = "https://rest.nexmo.com/sms/json"
+        String capturedUrl = null
+        Map map = [from:"07070", to:"070707", text: "This is just a random text"]
+        Map result = [carrier:[name:"carrierName", type:"carrierType"],country_code:"countryCode"]
+        def requestCustomizer = Mock(RequestCustomizer)
+        nexmoService.httpBuilderClient = Mock(HTTPBuilder)
+        nexmoService.httpBuilderClient.metaClass.post = { String url, Closure closure ->
+            capturedUrl = url
+            closure.delegate = requestCustomizer
+            closure.call()
+            return result
+        }
+
+        when:
+        nexmoService.makeSmsPostRequest(map)
+
+        then:
+        1 * nexmoService.httpBuilderClient.post(*_)
+    }
+
+    void "test makeLookUpGetRequest"() {
+        given:
+        final String restUrl = "https://api.nexmo.com/number/lookup/json"
+        Map map = [from:"07070", to:"070707", text: "This is just a random text"]
+        String capturedUrl = null
+        Map result = [carrier:[name:"carrierName", type:"carrierType"],country_code:"countryCode"]
+        def requestCustomizer = Mock(RequestCustomizer)
+        nexmoService.httpBuilderClient = Mock(HTTPBuilder)
+        nexmoService.httpBuilderClient.metaClass.get = { String url, Closure closure ->
+            capturedUrl = url
+            closure.delegate = requestCustomizer
+            closure.call()
+            return result
+        }
+
+        when:
+        nexmoService.makeLookUpGetRequest(map)
+
+        then:
+        1 * nexmoService.httpBuilderClient.get(*_)
+    }
+
+
+}
