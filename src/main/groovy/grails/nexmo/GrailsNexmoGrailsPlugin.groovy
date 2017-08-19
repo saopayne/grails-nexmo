@@ -4,6 +4,8 @@ import grails.plugins.*
 
 class GrailsNexmoGrailsPlugin extends Plugin {
 
+    // the plugin version
+    def version = "1.0"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "3.2.0 > *"
     // resources that are excluded from plugin packaging
@@ -15,8 +17,8 @@ class GrailsNexmoGrailsPlugin extends Plugin {
     def title = "Grails Nexmo" // Headline display name of the plugin
     def author = "Oyewale Ademola"
     def authorEmail = "saopayne@gmail.com"
-    def description = '''\
-Brief summary/description of the plugin.
+    def description = '''
+The grails-nexmo plugin enables grails applications to send SMS (Text Messaging), lookup a phone number for details using the Nexmo API.
 '''
     def profiles = ['web']
 
@@ -26,7 +28,7 @@ Brief summary/description of the plugin.
     // Extra (optional) plugin metadata
 
     // License: one of 'APACHE', 'GPL2', 'GPL3'
-//    def license = "APACHE"
+    def license = "APACHE"
 
     // Details of company behind the plugin (if there is one)
     def organization = [ name: "Chatdesk", url: "http://www.chatdesk.com/" ]
@@ -35,10 +37,10 @@ Brief summary/description of the plugin.
 //    def developers = [ [ name: "Joe Bloggs", email: "joe@bloggs.net" ]]
 
     // Location of the plugin's issue tracker.
-//    def issueManagement = [ system: "JIRA", url: "http://jira.grails.org/browse/GPMYPLUGIN" ]
+    def issueManagement = [ system: "GitHub", url: "https://github.com/saopayne/grails-nexmo/issues" ]
 
     // Online location of the plugin's browseable source code.
-//    def scm = [ url: "http://svn.codehaus.org/grails-plugins/" ]
+    def scm = [ url: "https://github.com/saopayne/grails-nexmo" ]
 
     Closure doWithSpring() { {->
             // TODO Implement runtime spring config (optional)
