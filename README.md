@@ -14,19 +14,19 @@ dependencies {
 
 ## Methods
 
-##### [__sendSms(String apiKey, String apiSecret, String callback, String to, String text, String from)__](https://github.com/caseyscarborough/nexmo/blob/master/grails-app/services/grails/plugin/nexmo/NexmoService.groovy#L30)
+##### [__sendSms(String apiKey, String apiSecret, String callback, String to, String text, String from)__](https://github.com/saopayne/grails-nexmo/blob/master/grails-app/services/NexmoService#L129)
 
 This method allows you to send an SMS message to a mobile number.
 
 * Parameters
   * __to__ - The mobile number in international format
   * __text__ - Body of the text message (with a maximum length of 3200 characters)
-  * __from__ (optional) - The number to send from, defaults to the `default_from` number in [`NexmoConfig.groovy`](https://github.com/caseyscarborough/nexmo/blob/master/grails-app/conf/NexmoConfig.groovy).
+  * __from__ (optional) - The number to send from
 * Returns
   * __status__ - The status code of the message
   * __id__ - The ID of the message
 
-#### [__call(String apiKey, String apiSecret, String to, String text, String from)__](https://github.com/caseyscarborough/nexmo/blob/master/grails-app/services/grails/plugin/nexmo/NexmoService.groovy#L67)
+#### [__call(String apiKey, String apiSecret, String to, String text, String from)__](https://github.com/saopayne/grails-nexmo/blob/master/grails-app/services/NexmoService#L153)
 
 This method uses text-to-speech to call your recipient and deliver a message.
 
