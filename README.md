@@ -6,7 +6,7 @@ A Grails plugin to allow applications send sms, lookup a number and make calls. 
 
 You can add this plugin to your application by following the steps on this page:
 
- [Project on gradle :)](https://plugins.gradle.org/plugin/com.saopayne.grails-nexmo) 
+ __[View project on gradle :)](https://plugins.gradle.org/plugin/com.saopayne.grails-nexmo)__ 
 
 ## Methods
 
@@ -20,7 +20,7 @@ This method allows you to perform a look up on a given number to get the carrier
   * __apiSecret__ - Your api secret from the settings dashboard
   * __number__  - The number to look up
 * Returns
-  * __carrier__ - The carrier details of the number
+  * __carrier__ - The carrier details of the number such as the name and type
   * __country_code__ - The country code 
 
 ##### [__sendSms(String apiKey, String apiSecret, String callback, String to, String text, String from)__](https://github.com/saopayne/grails-nexmo/blob/master/grails-app/services/NexmoService#L129)
