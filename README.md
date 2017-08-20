@@ -10,11 +10,26 @@ You can add this plugin to your application by following the steps on this page:
 
 ## Methods
 
+
+##### [__lookup(String apiKey, String apiSecret, String number)__](https://github.com/saopayne/grails-nexmo/blob/master/grails-app/services/NexmoService#L129)
+
+This method allows you to perform a look up on a given number to get the carrier, cuntry code etc.
+
+* Parameters
+  * __apiKey__ - Your api key from the settings dashboard
+  * __apiSecret__ - Your api secret from the settings dashboard
+  * __number__  - The number to look up
+* Returns
+  * __carrier__ - The carrier details of the number
+  * __country_code__ - The country code 
+
 ##### [__sendSms(String apiKey, String apiSecret, String callback, String to, String text, String from)__](https://github.com/saopayne/grails-nexmo/blob/master/grails-app/services/NexmoService#L129)
 
 This method allows you to send an SMS message to a mobile number.
 
 * Parameters
+  * __apiKey__ - Your api key from the settings dashboard
+  * __apiSecret__ - Your api secret from the settings dashboard
   * __to__ - The mobile number in international format
   * __text__ - Body of the text message (with a maximum length of 3200 characters)
   * __from__ (optional) - The number to send from
@@ -27,6 +42,8 @@ This method allows you to send an SMS message to a mobile number.
 This method uses text-to-speech to call your recipient and deliver a message.
 
 * Parameters
+  * __apiKey__ - Your api key from the settings dashboard
+  * __apiSecret__ - Your api secret from the settings dashboard
   * __to__ - The phone number to send the call to, in International Format
   * __text__ - The message to deliver during the call
   * __from__ (optional) - The number to send the call from. Must be a voice enabled inbound number associated with your account
