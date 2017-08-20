@@ -1,5 +1,5 @@
 /**
- * Author:: Ademola Oyewale
+ * @author:: Ademola Oyewale
  * <saopayne@gmail.com>
  */
 class NexmoException extends RuntimeException {

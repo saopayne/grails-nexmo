@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.bertramlabs.plugins</groupId>
+  <artifactId>asset-pipeline-grails</artifactId>
+  <version>2.8.2</version>
+  <dependencies>
+    <dependency>
+      <groupId>org.mozilla</groupId>
+      <artifactId>rhino</artifactId>
+      <version>1.7R4</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.bertramlabs.plugins</groupId>
+      <artifactId>asset-pipeline-core</artifactId>
+      <version>2.8.2</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.1.0</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+  <name>Asset-Pipeline Grails</name>
+  <description>The Asset-Pipeline is a plugin used for managing and processing static assets in Grails applications. Asset-Pipeline functions include processing and minification of both CSS and JavaScript files. It is also capable of being extended to compile custom static assets, such as CoffeeScript.</description>
+  <url>https://github.com/bertramdev/asset-pipeline</url>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <url>https://github.com/bertramdev/asset-pipeline</url>
+    <connection>scm:git@github.com:bertramdev/asset-pipeline.git</connection>
+    <developerConnection>scm:git@github.com:bertramdev/asset-pipeline.git</developerConnection>
+  </scm>
+  <issueManagement>
+    <system>Github Issues</system>
+    <url>https://github.com/bertramdev/asset-pipeline/issues</url>
+  </issueManagement>
+  <developers>
+    <developer>
+      <id>davydotcom</id>
+      <name>David Estes</name>
+    </developer>
+  </developers>
+</project>
