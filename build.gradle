@@ -103,7 +103,6 @@ pluginBundle {
     }
 }
 
-
 assets {
     packagePlugin = true
 }

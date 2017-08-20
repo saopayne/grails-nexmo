@@ -10,6 +10,7 @@ classes/
 .project
 .settings
 .classpath
+gradle.properties
 
 # Java annotation processor (APT)
 .factorypath
