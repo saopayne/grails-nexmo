@@ -1,5 +1,7 @@
 # Grails-Nexmo Plugin
 
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+
 A Grails plugin to allow applications send sms, lookup a number and make calls. with text-to-speech using [Nexmo's API](https://www.nexmo.com/).
 
 ## Installation
