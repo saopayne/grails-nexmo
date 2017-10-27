@@ -13,20 +13,18 @@ buildscript {
     }
 }
 
-version "0.1"
+version "0.1.2"
 group "com.saopayne.grails.nexmo"
 
-apply plugin:"eclipse"
-apply plugin:"idea"
-apply plugin:"org.grails.grails-plugin"
-apply plugin:"org.grails.grails-plugin-publish"
-apply plugin: 'maven-publish'
-apply plugin:"org.grails.grails-gsp"
-apply plugin:"asset-pipeline"
+apply plugin: "eclipse"
+apply plugin: "idea"
+apply plugin: "org.grails.grails-plugin"
+apply plugin: "org.grails.grails-plugin-publish"
+apply plugin: "org.grails.grails-gsp"
+apply plugin: "asset-pipeline"
 apply plugin: "com.gradle.plugin-publish"
 
 repositories {
-    jcenter()
     mavenLocal()
     maven { url "https://repo.grails.org/grails/core" }
 }
@@ -37,6 +35,38 @@ dependencyManagement {
     }
     applyMavenExclusions false
 }
+
+version "0.1.2"
+group "org.grails.plugins"
+bintray {
+    user = "saopayne"
+    key = ""
+    pkg {
+        userOrg = '' // If you want to publish to an organization
+        name = "$project.name"
+        licenses = ['Apache-2.0']
+        issueTrackerUrl = "https://github.com/saopayne/$project.name/issues"
+        vcsUrl = "https://github.com/saopayne/$project.name"
+        version {
+            attributes = ['grails-plugin': "$project.group:$project.name"]
+            name = project.version
+        }
+        publications = ['NexmoPublication']
+    }
+}
+
+publishing {
+    publications {
+        NexmoPublication(MavenPublication) {
+            from components.java
+            groupId 'com.saopayne'
+            artifactId 'grails-nexmo'
+            version '1.2'
+        }
+    }
+}
+
+apply plugin: 'java'
 
 dependencies {
     compile gradleApi()
@@ -69,22 +99,28 @@ dependencies {
     compile(group:'org.apache.httpcomponents',name:'httpclient-cache',version:'4.3.6')
     compile(group:'org.apache.httpcomponents',name:'httpmime',version:'4.3.6')
     compile 'org.grails:grails-datastore-rest-client:5.0.0.RC2'
-
-
 }
+
+
+bootRun {
+    jvmArgs('-Dspring.output.ansi.enabled=always')
+}
+// enable if you wish to package this plugin as a standalone application
+bootRepackage.enabled = false
+
 grailsPublish {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    githubSlug = 'foo/bar'
-    userOrg = 'tracchis' // Optional
+    user = "saopayne"
+    key = ""
+    githubSlug = 'saopayne/grails-nexmo'
+    userOrg = '' // Optional
     license {
         name = 'Apache-2.0'
     }
     title = "Grails-Nexmo"
-    desc = "Provides Lookup of phone number, SMS sending and phne calls capabilities to a Grails application"
-    developers = [saopayne:"Ademola Oyewale"]
-    portalUser = System.getenv('GRAILS_PORTAL_USER')
-    portalPassword = System.getenv('GRAILS_PORTAL_PASSWORD')
+    desc = "Provides Lookup of phone number, SMS sending and phone calls capabilities for a Grails application"
+    developers = [saopayne: "Ademola Oyewale"]
+    portalUser = ""
+    portalPassword = ""
 }
 
 // The configuration example below shows the minimum required properties
@@ -92,13 +128,14 @@ grailsPublish {
 pluginBundle {
     website = 'https://github.com/saopayne/grails-nexmo'
     vcsUrl = 'https://github.com/saopayne/grails-nexmo'
-    description = 'Provides Lookup of phone number, SMS sending and phne calls capabilities to a Grails application'
+    description = 'Provides Lookup of phone number, SMS sending and phone calls capabilities for a Grails application'
     tags = ['nexmo', 'grails', 'api']
 
     plugins {
         grailsNexmoPlugin {
             id = 'com.saopayne.grails-nexmo'
             displayName = 'Grails Nexmo plugin'
+            version = '0.1.2'
         }
     }
 }

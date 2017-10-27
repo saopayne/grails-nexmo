@@ -4,9 +4,32 @@ A Grails plugin to allow applications send sms, lookup a number and make calls. 
 
 ## Installation
 
-You can add this plugin to your application by following the steps on this page:
+##### Using Gradle
 
- __[View project on gradle :)](https://plugins.gradle.org/plugin/com.saopayne.grails-nexmo)__ 
+```compile 'com.saopayne:grails-nexmo:1.2'```
+
+##### Using Maven
+```
+<dependency>
+  <groupId>com.saopayne</groupId>
+  <artifactId>grails-nexmo</artifactId>
+  <version>1.2</version>
+  <type>pom</type>
+</dependency>
+```
+
+##### Using Ivy
+```
+<dependency org='com.saopayne' name='grails-nexmo' rev='1.2'>
+  <artifact name='grails-nexmo' ext='pom' ></artifact>
+</dependency>
+```
+
+##### Adding Jar File
+
+https://dl.bintray.com/saopayne/plugins/com/saopayne/grails-nexmo/1.2/grails-nexmo-1.2.jar
+
+
 
 ## Methods
 
@@ -73,12 +96,11 @@ class SampleController {
       lookUpResult = nexmoService.lookup("apiKey", "apiSecret", "070707") 
        
       // Send the message "hello Nexmo" to 0704303333
-      smsResult  = nexmoService.sendSms("apiKey","apiSecret", "",0704303333", "Hello Nexmo")
+      smsResult = nexmoService.sendSms("apiKey","apiSecret", "", "0704303333", "Hello Nexmo")
 
       // Call the number and tell them a message
       callResult = nexmoService.call("020233323", "Have a great day! Goodbye.")
-    
-    catch (NexmoException e) {
+    } catch (NexmoException e) {
       // Handle error if failure
     }
   }
