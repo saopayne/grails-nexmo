@@ -125,4 +125,4 @@ Here is an example response:
 #### To contribute
 - Fork this repository.
 - Create a new branch and make additions as you deem fit.
-- Send in a PR with what the PR does.
+- Send in a PR with the feature/bug it addresses.
